@@ -77,7 +77,9 @@ def get_dates():
 
     return (
         first_day_prev_month.strftime("%Y-%m-%d 00:00"),
-        last_day_prev_month.strftime("%Y-%m-%d 23:59")
+        last_day_prev_month.strftime("%Y-%m-%d 23:59"),
+        first_day_prev_month.strftime("%Y-%m-%d"),
+        last_day_prev_month.strftime("%Y-%m-%d")
     )                              
 
 def safe_get(driver, url, timeout=REQUEST_TIMEOUT):
@@ -94,12 +96,12 @@ def download_from_nextbike(driver, download_dir, url):
         
     safe_get(driver, url, timeout)
 
-    start_date, end_date = get_dates()
+    start_time, end_time, start_date, end_date = get_dates()
     start_time = time.time()
 
     if url.endswith(("639", "641", "640")):
-        driver.find_element(By.ID, "parameters[start_time]").send_keys(start_date)
-        driver.find_element(By.ID, "parameters[end_time]").send_keys(end_date)
+        driver.find_element(By.ID, "parameters[start_time]").send_keys(start_time)
+        driver.find_element(By.ID, "parameters[end_time]").send_keys(end_time)
 
     elif url.endswith(("730", "129")):
         driver.find_element(By.ID, "parameters[start_date]").send_keys(start_date)
