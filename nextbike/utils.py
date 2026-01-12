@@ -70,7 +70,7 @@ def log_in_nextbike(driver, url):
     driver.find_element(By.ID, "login_post").click() 
 
 def get_dates():
-    meses = 11
+    meses = 10
     days = meses*30
     today = date.today() - timedelta(days=days)
     last_day_prev_month = today.replace(day=1) - timedelta(days=1)
@@ -98,7 +98,7 @@ def download_from_nextbike(driver, download_dir, url):
     safe_get(driver, url, timeout)
 
     start_time, end_time, start_date, end_date = get_dates()
-    start_time = time.time()
+    start_cron = time.time()
     
     if url.endswith(("639", "641", "640")):
         driver.find_element(By.ID, "parameters[start_time]").send_keys(start_time)
@@ -117,7 +117,7 @@ def download_from_nextbike(driver, download_dir, url):
     file_path = None
     for _ in range(240):
         files = glob.glob(os.path.join(download_dir, "*.csv"))
-        new_files = [f for f in files if os.path.getmtime(f) > start_time]
+        new_files = [f for f in files if os.path.getmtime(f) > start_cron]
 
         if new_files:
             file_path = max(new_files, key=os.path.getmtime)
