@@ -110,12 +110,12 @@ def download_from_nextbike(driver, download_dir, url):
 
     if not url.endswith("424"):
         if url.endswith("410"): time.sleep(20)
-        # driver.find_element(By.ID, "parameters[execute_on_lendings_archive]").click() 
+        driver.find_element(By.ID, "parameters[execute_on_lendings_archive]").click()
         driver.find_element(By.ID, "parameters[export_csv]").click()  
         driver.find_element(By.ID, "queries_view_get").click()
 
     file_path = None
-    for _ in range(60):
+    for _ in range(240):
         files = glob.glob(os.path.join(download_dir, "*.csv"))
         new_files = [f for f in files if os.path.getmtime(f) > start_time]
 
