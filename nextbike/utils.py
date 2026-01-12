@@ -110,7 +110,7 @@ def download_from_nextbike(driver, download_dir, url):
 
     if not url.endswith("424"):
         if url.endswith("410"): time.sleep(20)
-        driver.find_element(By.ID, "parameters[execute_on_lendings_archive]").click() 
+        # driver.find_element(By.ID, "parameters[execute_on_lendings_archive]").click() 
         driver.find_element(By.ID, "parameters[export_csv]").click()  
         driver.find_element(By.ID, "queries_view_get").click()
 
@@ -128,7 +128,7 @@ def download_from_nextbike(driver, download_dir, url):
     if not file_path: raise RuntimeError("No se encontró ningún CSV generado por Nextbike")
 
     df = pd.read_csv(file_path, sep='\t', encoding='utf-8')
-    print(f"TAAMAÑO DEL DF: {df.shape}")
+    print(f"TAMAÑO DEL DF: {df.shape}")
     return df
 
 def run_nextbike_etl(url):
