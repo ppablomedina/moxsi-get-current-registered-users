@@ -70,10 +70,7 @@ def log_in_nextbike(driver, url):
     driver.find_element(By.ID, "login_post").click() 
 
 def get_dates():
-    
-    meses = 11 
-    dias = meses * 30
-    today = date.today() - timedelta(days=dias)
+    today = date.today()
     last_day_prev_month = today.replace(day=1) - timedelta(days=1)
     first_day_prev_month = last_day_prev_month.replace(day=1)
 
