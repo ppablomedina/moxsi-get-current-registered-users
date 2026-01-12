@@ -99,9 +99,7 @@ def download_from_nextbike(driver, download_dir, url):
 
     start_time, end_time, start_date, end_date = get_dates()
     start_time = time.time()
-
-    driver.find_element(By.ID, "parameters[execute_on_lendings_archive]").click() 
-
+    
     if url.endswith(("639", "641", "640")):
         driver.find_element(By.ID, "parameters[start_time]").send_keys(start_time)
         driver.find_element(By.ID, "parameters[end_time]").send_keys(end_time)
@@ -112,6 +110,7 @@ def download_from_nextbike(driver, download_dir, url):
 
     if not url.endswith("424"):
         if url.endswith("410"): time.sleep(20)
+        driver.find_element(By.ID, "parameters[execute_on_lendings_archive]").click() 
         driver.find_element(By.ID, "parameters[export_csv]").click()  
         driver.find_element(By.ID, "queries_view_get").click()
 
