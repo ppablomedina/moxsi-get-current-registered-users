@@ -5,10 +5,7 @@ from selenium.webdriver.common.by import By
 from datetime import date, timedelta
 from selenium import webdriver
 from mail import get_code
-import pandas as pd
-import time
-import glob
-import os
+import time, glob, os, pandas as pd
 
 
 creds = os.getenv("NEXTBIKE_CREDS")
@@ -70,9 +67,7 @@ def log_in_nextbike(driver, url):
     driver.find_element(By.ID, "login_post").click() 
 
 def get_dates():
-    meses = 10
-    days = meses*30
-    today = date.today() - timedelta(days=days)
+    today = date.today()
     last_day_prev_month = today.replace(day=1) - timedelta(days=1)
     first_day_prev_month = last_day_prev_month.replace(day=1)
 
