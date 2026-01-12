@@ -127,7 +127,9 @@ def download_from_nextbike(driver, download_dir, url):
 
     if not file_path: raise RuntimeError("No se encontró ningún CSV generado por Nextbike")
 
-    return pd.read_csv(file_path, sep='\t', encoding='utf-8')
+    df = pd.read_csv(file_path, sep='\t', encoding='utf-8')
+    print(f"TAAMAÑO DEL DF: {df.shape}")
+    return df
 
 def run_nextbike_etl(url):
     driver, download_dir = set_driver()
