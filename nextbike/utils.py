@@ -70,7 +70,9 @@ def log_in_nextbike(driver, url):
     driver.find_element(By.ID, "login_post").click() 
 
 def get_dates():
-    today = date.today()
+    meses = 11
+    days = meses*30
+    today = date.today() - timedelta(days=days)
     last_day_prev_month = today.replace(day=1) - timedelta(days=1)
     first_day_prev_month = last_day_prev_month.replace(day=1)
 
@@ -97,6 +99,8 @@ def download_from_nextbike(driver, download_dir, url):
 
     start_time, end_time, start_date, end_date = get_dates()
     start_time = time.time()
+
+    driver.find_element(By.ID, "parameters[execute_on_lendings_archive]").click() 
 
     if url.endswith(("639", "641", "640")):
         driver.find_element(By.ID, "parameters[start_time]").send_keys(start_time)
