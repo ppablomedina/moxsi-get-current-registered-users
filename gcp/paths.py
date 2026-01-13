@@ -15,6 +15,13 @@ prev_month_year = prev_month_ts.year
 prev_month_str  = prev_month_ts.strftime("%Y%m")  # p.ej. 202510
 
 # Helpers para construir rutas
+def yearly_path(dataset, ext):
+    """
+    Documentos anuales: carpeta = año actual,
+    fichero = año actual (YYYY.ext).
+    """
+    return f"{PATH_DATALAKE_DOCS}/{prev_month_year}/{dataset}.{ext}"
+    
 def monthly_path(dataset, ext):
     """
     Documentos mensuales: carpeta = mes anterior (YYYYMM),
@@ -30,6 +37,8 @@ def daily_path_year(dataset, ext):
     return f"{PATH_DATALAKE_DOCS}/{crrnt_year}/{dataset}/{crrnt_full_date}.{ext}"
 
 # Rutas
+path_incidencias              = yearly_path("incidencias", ext="xlsx")
+
 path_recaudacion              = monthly_path("financiero.recaudacion", ext="csv")
 path_incidencias              = monthly_path("moxsi.incidencias", ext="xlsx")
 path_inventario               = monthly_path("moxsi.inventario", ext="csv")
