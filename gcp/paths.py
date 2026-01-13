@@ -15,22 +15,22 @@ prev_month_year = prev_month_ts.year
 prev_month_str  = prev_month_ts.strftime("%Y%m")  # p.ej. 202510
 
 # Helpers para construir rutas
-def monthly_path(dataset, ext):    return f"{PATH_DATALAKE_DOCS}/{prev_month_year}/{dataset}/{prev_month_str}.{ext}"
-def daily_path_year(dataset, ext): return f"{PATH_DATALAKE_DOCS}/{crrnt_year}/{dataset}/{crrnt_full_date}.{ext}"
+def monthly_path(dataset, ext): return f"{PATH_DATALAKE_DOCS}/{prev_month_year}/{dataset}/{prev_month_str}.{ext}"
+def daily_path(dataset, ext):   return f"{PATH_DATALAKE_DOCS}/{crrnt_year}/{dataset}/{crrnt_full_date}.{ext}"
 
 # Rutas
-path_recaudacion              = monthly_path("financiero.recaudacion", ext="csv")
-path_incidencias              = monthly_path("moxsi.incidencias", ext="xlsx")
-path_inventario               = monthly_path("moxsi.inventario", ext="csv")
-path_repuestos                = monthly_path("moxsi.repuestos", ext="xlsx")
-path_revisiones               = monthly_path("moxsi.revisiones", ext="xlsx")
-path_abonos                   = monthly_path("nextbike.abonos", ext="csv")
-path_clientes_detalles        = monthly_path("nextbike.clientes-detalles", ext="csv")
-path_alquileres               = monthly_path("nextbike.alquileres", ext="csv")
-path_alquileres_con_abono     = monthly_path("nextbike.alquileres-con-abono", ext="csv")
-path_alquileres_sin_abono     = monthly_path("nextbike.alquileres-sin-abono", ext="csv")
-path_estaciones               = daily_path_year("moxsi.estaciones", ext="csv")
-path_vehiculos_anclados       = daily_path_year("nextbike.vehiculos-anclados", ext="csv")
-path_vehiculos_coords         = daily_path_year("nextbike.vehiculos-coords", ext="csv")
-path_clientes_registrados     = daily_path_year("nextbike.clientes-registrados", ext="csv")
-path_clientes_ultimo_alquiler = daily_path_year("nextbike.clientes-ult-alquiler-suscripciones", ext="csv")
+path_recaudacion              = monthly_path("financiero.recaudacion",                       ext="csv")
+path_incidencias              = monthly_path("moxsi.incidencias",                            ext="xlsx")
+path_inventario               = monthly_path("moxsi.inventario",                             ext="csv")
+path_repuestos                = monthly_path("moxsi.repuestos",                              ext="xlsx")
+path_revisiones               = monthly_path("moxsi.revisiones",                             ext="xlsx")
+path_abonos                   = monthly_path("nextbike.abonos",                              ext="csv")
+path_clientes_detalles        = monthly_path("nextbike.clientes-detalles",                   ext="csv")
+path_alquileres               = monthly_path("nextbike.alquileres",                          ext="csv")
+path_alquileres_con_abono     = monthly_path("nextbike.alquileres-con-abono",                ext="csv")
+path_alquileres_sin_abono     = monthly_path("nextbike.alquileres-sin-abono",                ext="csv")
+path_estaciones               =   daily_path("moxsi.estaciones",                             ext="csv")
+path_vehiculos_anclados       =   daily_path("nextbike.vehiculos-anclados",                  ext="csv")
+path_vehiculos_coords         =   daily_path("nextbike.vehiculos-coords",                    ext="csv")
+path_clientes_registrados     =   daily_path("nextbike.clientes-registrados",                ext="csv")
+path_clientes_ultimo_alquiler =   daily_path("nextbike.clientes-ult-alquiler-suscripciones", ext="csv")
