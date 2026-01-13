@@ -40,7 +40,7 @@ def entry_point(req):
         
         dic[path_estaciones]  = download_stations_moxsi()
 
-        # ! Faltan incidencias y recaudación
+        # ! Falta recaudación
 
         # 3) Subir todo a GCP
         upload_to_gcp(dic)
@@ -54,3 +54,4 @@ app = Flask(__name__)
 @app.route("/", methods=["GET", "POST"])
 def run():
     return entry_point(request)
+
