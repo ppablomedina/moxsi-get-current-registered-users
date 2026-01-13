@@ -33,11 +33,12 @@ def entry_point(req):
         dic[path_alquileres_con_abono]     = download_from_nextbike(driver, download_dir, link_alquileres_con_abono)
         dic[path_alquileres_sin_abono]     = download_from_nextbike(driver, download_dir, link_alquileres_sin_abono)
 
-        dic[path_revisiones] = download_from_gs_excel(link_revisiones)
-        dic[path_inventario] = download_from_gs_single_sheet(link_inventario)
-        dic[path_repuestos]  = download_from_gs_excel(link_repuestos)
-
-        dic[path_estaciones] = download_stations_moxsi()
+        dic[path_revisiones]  = download_from_gs_excel(link_revisiones)
+        dic[path_inventario]  = download_from_gs_single_sheet(link_inventario)
+        dic[path_repuestos]   = download_from_gs_excel(link_repuestos)
+        dic[path_incidencias] = download_from_gs_excel(link_incidencias)
+        
+        dic[path_estaciones]  = download_stations_moxsi()
 
         # ! Faltan incidencias y recaudación
 
