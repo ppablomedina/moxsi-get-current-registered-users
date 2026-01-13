@@ -15,30 +15,10 @@ prev_month_year = prev_month_ts.year
 prev_month_str  = prev_month_ts.strftime("%Y%m")  # p.ej. 202510
 
 # Helpers para construir rutas
-def yearly_path(dataset, ext):
-    """
-    Documentos anuales: carpeta = año actual,
-    fichero = año actual (YYYY.ext).
-    """
-    return f"{PATH_DATALAKE_DOCS}/{prev_month_year}/{dataset}.{ext}"
-    
-def monthly_path(dataset, ext):
-    """
-    Documentos mensuales: carpeta = mes anterior (YYYYMM),
-    fichero = mes anterior (YYYYMM.ext).
-    """
-    return f"{PATH_DATALAKE_DOCS}/{prev_month_year}/{dataset}/{prev_month_str}.{ext}"
-
-def daily_path_year(dataset, ext):
-    """
-    Documentos diarios: carpeta = año actual,
-    fichero = fecha completa actual (YYYYMMDD.ext).
-    """
-    return f"{PATH_DATALAKE_DOCS}/{crrnt_year}/{dataset}/{crrnt_full_date}.{ext}"
+def monthly_path(dataset, ext):    return f"{PATH_DATALAKE_DOCS}/{prev_month_year}/{dataset}/{prev_month_str}.{ext}"
+def daily_path_year(dataset, ext): return f"{PATH_DATALAKE_DOCS}/{crrnt_year}/{dataset}/{crrnt_full_date}.{ext}"
 
 # Rutas
-path_incidencias              = yearly_path("incidencias", ext="xlsx")
-
 path_recaudacion              = monthly_path("financiero.recaudacion", ext="csv")
 path_incidencias              = monthly_path("moxsi.incidencias", ext="xlsx")
 path_inventario               = monthly_path("moxsi.inventario", ext="csv")
@@ -49,7 +29,6 @@ path_clientes_detalles        = monthly_path("nextbike.clientes-detalles", ext="
 path_alquileres               = monthly_path("nextbike.alquileres", ext="csv")
 path_alquileres_con_abono     = monthly_path("nextbike.alquileres-con-abono", ext="csv")
 path_alquileres_sin_abono     = monthly_path("nextbike.alquileres-sin-abono", ext="csv")
-
 path_estaciones               = daily_path_year("moxsi.estaciones", ext="csv")
 path_vehiculos_anclados       = daily_path_year("nextbike.vehiculos-anclados", ext="csv")
 path_vehiculos_coords         = daily_path_year("nextbike.vehiculos-coords", ext="csv")
