@@ -1,3 +1,4 @@
+from webdriver_manager.chrome   import ChromeDriverManager
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -9,20 +10,21 @@ import time, glob, os, pandas as pd
 
 
 creds = os.getenv("NEXTBIKE_CREDS")
-NEXTBIKE_USER  = creds.split("\n")[0]
-NEXTBIKE_PASS  = creds.split("\n")[1]
+NEXTBIKE_USER = creds.split("\n")[0]
+NEXTBIKE_PASS = creds.split("\n")[1]
+# NEXTBIKE_USER  = "pmedina"
+# NEXTBIKE_PASS  = "nPmse.52725"
 
 REQUEST_TIMEOUT = 400 
 
 def set_driver():    
     chrome_options = Options()
-    chrome_options.add_argument("--headless=new")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--window-size=1920,1080")
+    # chrome_options.add_argument("--headless=new")
+    # chrome_options.add_argument("--no-sandbox")
+    # chrome_options.add_argument("--disable-dev-shm-usage")
+    # chrome_options.add_argument("--disable-gpu")
 
-    download_dir = "/tmp/downloads"
+    download_dir = os.path.join(os.getcwd(), "downloads")
     os.makedirs(download_dir, exist_ok=True)
 
     prefs = {
@@ -33,21 +35,23 @@ def set_driver():
     }
     chrome_options.add_experimental_option("prefs", prefs)
 
-    chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
-    service = Service(chromedriver_path)
+    # chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
+    # service = Service(chromedriver_path)
+    service = Service(ChromeDriverManager().install())
+
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
-    # 👉 ESTE es el que realmente usa urllib3
+    # ESTE es el que realmente usa urllib3
     driver.command_executor._client_config.timeout = REQUEST_TIMEOUT
 
     # (opcional) permitir descargas en headless
-    try:
-        driver.execute_cdp_cmd(
-            "Page.setDownloadBehavior",
-            {"behavior": "allow", "downloadPath": download_dir},
-        )
-    except Exception as e:
-        print("No se pudo configurar setDownloadBehavior:", e)
+    # try:
+    #     driver.execute_cdp_cmd(
+    #         "Page.setDownloadBehavior",
+    #         {"behavior": "allow", "downloadPath": download_dir},
+    #     )
+    # except Exception as e:
+    #     print("No se pudo configurar setDownloadBehavior:", e)
 
     return driver, download_dir
 
@@ -123,7 +127,7 @@ def download_from_nextbike(driver, download_dir, url):
     if not file_path: raise RuntimeError("No se encontró ningún CSV generado por Nextbike")
 
     df = pd.read_csv(file_path, sep='\t', encoding='utf-8')
-    print(f"TAMAÑO DEL DF: {df.shape}")
+
     return df
 
 def run_nextbike_etl(url):

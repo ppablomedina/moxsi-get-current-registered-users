@@ -49,5 +49,5 @@ app = Flask(__name__)
 def run():
     return entry_point(request)
 
-
-
+if __name__ == "__main__":
+    entry_point(None)

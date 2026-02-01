@@ -1,12 +1,11 @@
-import imaplib
-import email
-import re
-import os
+import imaplib, email, re, os
 
 
 creds = os.getenv("GMAIL_CREDS")
 INBOX_EMAIL    = creds.split("\n")[0]
 INBOX_PASSWORD = creds.split("\n")[1]
+# INBOX_EMAIL    = "pmedina@sagulpa.com"
+# INBOX_PASSWORD = "lpob xgfi zkye srwq"
 
 def get_code():
 
@@ -43,10 +42,8 @@ def get_code():
     match = re.search(r"use the code\s+(\d+)", body_clean, re.IGNORECASE)
     codigo = match.group(1)
 
-    # llevar el correo a la papelera
-    mail.store(latest_email_id, '+X-GM-LABELS', '\\Trash')
+    mail.store(latest_email_id, '+X-GM-LABELS', '\\Trash') # Llevar el correo a la papelera
     mail.expunge()
-
     mail.logout()
 
     return codigo

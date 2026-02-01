@@ -1,8 +1,6 @@
 from gcp.paths    import BUCKET_NAME
 from google.cloud import storage
-import pandas as pd  
-import mimetypes
-import io
+import mimetypes, io, pandas as pd
 
 
 BUCKET = storage.Client().bucket(BUCKET_NAME)
