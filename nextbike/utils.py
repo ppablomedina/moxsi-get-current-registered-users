@@ -105,7 +105,7 @@ def download_from_nextbike(driver, download_dir, url):
 
     if not url.endswith("424"):
         if url.endswith("410"): time.sleep(20)
-        driver.find_element(By.ID, "parameters[execute_on_lendings_archive]").click()
+        # driver.find_element(By.ID, "parameters[execute_on_lendings_archive]").click()
         driver.find_element(By.ID, "parameters[export_csv]").click()  
         driver.find_element(By.ID, "queries_view_get").click()
 
