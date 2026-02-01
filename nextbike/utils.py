@@ -126,9 +126,8 @@ def download_from_nextbike(driver, download_dir, url):
 
     if not file_path: raise RuntimeError("No se encontró ningún CSV generado por Nextbike")
 
-    df = pd.read_csv(file_path, sep='\t', encoding='utf-8')
-
-    return df
+    try:               return pd.read_csv(file_path, sep='\t', dtype={'mobile': str})
+    except ValueError: return pd.read_csv(file_path, sep='\t')
 
 def run_nextbike_etl(url):
     driver, download_dir = set_driver()
