@@ -35,9 +35,9 @@ def set_driver():
     }
     chrome_options.add_experimental_option("prefs", prefs)
 
-    # chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
-    # service = Service(chromedriver_path)
-    service = Service(ChromeDriverManager().install())
+    chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
+    service = Service(chromedriver_path)
+    # service = Service(ChromeDriverManager().install())
 
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
