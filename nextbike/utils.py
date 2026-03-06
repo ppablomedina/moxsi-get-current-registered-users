@@ -1,11 +1,11 @@
-from webdriver_manager.chrome   import ChromeDriverManager
-from selenium.common.exceptions import TimeoutException
+from webdriver_manager.chrome          import ChromeDriverManager
+from selenium.common.exceptions        import TimeoutException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
+from selenium.webdriver.common.by      import By
 from datetime import date, timedelta
 from selenium import webdriver
-from mail import get_code
+from mail     import get_code
 import time, glob, os, pandas as pd
 
 
@@ -44,15 +44,6 @@ def set_driver():
     # ESTE es el que realmente usa urllib3
     driver.command_executor._client_config.timeout = REQUEST_TIMEOUT
 
-    # (opcional) permitir descargas en headless
-    # try:
-    #     driver.execute_cdp_cmd(
-    #         "Page.setDownloadBehavior",
-    #         {"behavior": "allow", "downloadPath": download_dir},
-    #     )
-    # except Exception as e:
-    #     print("No se pudo configurar setDownloadBehavior:", e)
-
     return driver, download_dir
 
 def log_in_nextbike(driver, url):
@@ -82,6 +73,29 @@ def get_dates():
         last_day_prev_month.strftime("%Y-%m-%d")
     )                              
 
+def get_biweekly_dates():
+    """Devuelve dos rangos de fechas (primera y segunda quincena) del mes anterior."""
+    today = date.today()
+    last_day = today.replace(day=1) - timedelta(days=1)
+    first_day = last_day.replace(day=1)
+    mid_last = last_day.replace(day=15)
+    mid_first = last_day.replace(day=16)
+
+    return [
+        (
+            first_day.strftime("%Y-%m-%d 00:00"),
+            mid_last.strftime("%Y-%m-%d 23:59"),
+            first_day.strftime("%Y-%m-%d"),
+            mid_last.strftime("%Y-%m-%d"),
+        ),
+        (
+            mid_first.strftime("%Y-%m-%d 00:00"),
+            last_day.strftime("%Y-%m-%d 23:59"),
+            mid_first.strftime("%Y-%m-%d"),
+            last_day.strftime("%Y-%m-%d"),
+        ),
+    ]
+
 def safe_get(driver, url, timeout=REQUEST_TIMEOUT):
     driver.set_page_load_timeout(timeout)
     try: driver.get(url)
@@ -89,21 +103,23 @@ def safe_get(driver, url, timeout=REQUEST_TIMEOUT):
         if url.endswith("410"): return
         raise Exception(f"La página {url} tardó más de {timeout} segundos en cargar.")
 
-def download_from_nextbike(driver, download_dir, url):
+def download_from_nextbike(driver, download_dir, url, date_override=None):
 
     if url.endswith("410"): timeout = 5
     else:                   timeout = REQUEST_TIMEOUT
         
     safe_get(driver, url, timeout)
 
-    start_time, end_time, start_date, end_date = get_dates()
+    if date_override: start_time, end_time, start_date, end_date = date_override
+    else:             start_time, end_time, start_date, end_date = get_dates()
+    
     start_cron = time.time()
     
     if url.endswith(("639", "641", "640")):
         driver.find_element(By.ID, "parameters[start_time]").send_keys(start_time)
         driver.find_element(By.ID, "parameters[end_time]").send_keys(end_time)
 
-    elif url.endswith(("730", "129")):
+    elif url.endswith(("730", "129", "525")):
         driver.find_element(By.ID, "parameters[start_date]").send_keys(start_date)
         driver.find_element(By.ID, "parameters[end_date]").send_keys(end_date)
 
@@ -125,7 +141,6 @@ def download_from_nextbike(driver, download_dir, url):
         time.sleep(1)
 
     if not file_path: raise RuntimeError("No se encontró ningún CSV generado por Nextbike")
-
     try:               return pd.read_csv(file_path, sep='\t', dtype={'mobile': str})
     except ValueError: return pd.read_csv(file_path, sep='\t')
 

@@ -6,5 +6,4 @@ link_clientes_registrados     = link_login + "410" # ~ no llega a cargar
 link_clientes_detalles        = link_login + "730" # date -
 link_clientes_ultimo_alquiler = link_login + "424" # ~ tarde mucho
 link_alquileres               = link_login + "129" # date - histórico
-link_alquileres_con_abono     = link_login + "641" # time - histórico
-link_alquileres_sin_abono     = link_login + "640" # time - histórico
+link_transactions             = link_login + "525" # date - histórico

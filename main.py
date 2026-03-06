@@ -1,6 +1,6 @@
 from flask          import Flask, request
 from moxsi_api      import download_stations_moxsi
-from nextbike.utils import set_driver, download_from_nextbike, log_in_nextbike
+from nextbike.utils import set_driver, download_from_nextbike, log_in_nextbike, get_biweekly_dates
 from nextbike.paths import *
 from gcp.utils      import upload_to_gcp
 from gcp.paths      import *
@@ -27,14 +27,18 @@ def entry_point(req):
         dic[path_clientes_detalles]        = download_from_nextbike(driver, download_dir, link_clientes_detalles)
         dic[path_clientes_ultimo_alquiler] = download_from_nextbike(driver, download_dir, link_clientes_ultimo_alquiler)
         dic[path_alquileres]               = download_from_nextbike(driver, download_dir, link_alquileres)
-        dic[path_alquileres_con_abono]     = download_from_nextbike(driver, download_dir, link_alquileres_con_abono)
-        dic[path_alquileres_sin_abono]     = download_from_nextbike(driver, download_dir, link_alquileres_sin_abono)
+
+        # Recaudación: dos descargas quincenales combinadas en un único DataFrame
+        q1, q2 = get_biweekly_dates()
+        df_rec1 = download_from_nextbike(driver, download_dir, link_transactions, date_override=q1)
+        df_rec2 = download_from_nextbike(driver, download_dir, link_transactions, date_override=q2)
+        dic[path_transactions] = pd.concat([df_rec1, df_rec2], ignore_index=True)
+
         dic[path_inventario]               = download_from_gs_single_sheet(link_inventario)
         dic[path_revisiones]               = download_from_gs_excel(link_revisiones)
         dic[path_repuestos]                = download_from_gs_excel(link_repuestos)
         dic[path_incidencias]              = download_from_gs_excel(link_incidencias)
         dic[path_estaciones]               = download_stations_moxsi()
-        # ! Falta recaudación
 
         # 3) Subir todo a GCP
         upload_to_gcp(dic)
