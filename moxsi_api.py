@@ -2,13 +2,15 @@ import http.client, json, os, pandas as pd
 
 
 # !
-creds = os.getenv("MOXSI_API_CREDS")
-USER = creds.split("\n")[0]
-PASS = creds.split("\n")[1]
-# USER = "bigdata.c3"
-# PASS = "/JkkxoEh2Q2s+QnfL8GH+Bzst4t2kcAAjvd54DBkIbU="
-# USER = "desarrollo.oficina.dato"
-# PASS = "*/uD^*8jHTeJtHo5wm.)"
+try:
+    creds = os.getenv("MOXSI_API_CREDS")
+    USER = creds.split("\n")[0]
+    PASS = creds.split("\n")[1]
+except:
+    USER = "bigdata.c3"
+    PASS = "/JkkxoEh2Q2s+QnfL8GH+Bzst4t2kcAAjvd54DBkIbU="
+    # USER = "desarrollo.oficina.dato"
+    # PASS = "*/uD^*8jHTeJtHo5wm.)"
 
 def download_stations_moxsi():
 

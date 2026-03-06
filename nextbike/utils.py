@@ -3,17 +3,20 @@ from selenium.common.exceptions        import TimeoutException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by      import By
-from datetime import date, timedelta
-from selenium import webdriver
-from mail     import get_code
+from datetime  import date, timedelta
+from selenium  import webdriver
+from mail      import get_code
+from gcp.paths import num_months_back
 import time, glob, os, pandas as pd
 
 
-creds = os.getenv("NEXTBIKE_CREDS")
-NEXTBIKE_USER = creds.split("\n")[0]
-NEXTBIKE_PASS = creds.split("\n")[1]
-# NEXTBIKE_USER  = "pmedina"
-# NEXTBIKE_PASS  = "nPmse.52725"
+try: 
+    creds = os.getenv("NEXTBIKE_CREDS")
+    NEXTBIKE_USER = creds.split("\n")[0]
+    NEXTBIKE_PASS = creds.split("\n")[1]
+except:
+    NEXTBIKE_USER  = "pmedina"
+    NEXTBIKE_PASS  = "nPmse.52725"
 
 REQUEST_TIMEOUT = 400 
 
@@ -35,11 +38,13 @@ def set_driver():
     }
     chrome_options.add_experimental_option("prefs", prefs)
 
-    chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
-    service = Service(chromedriver_path)
-    # service = Service(ChromeDriverManager().install())
+    try:    
+        service = Service(os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver"))
+        driver = webdriver.Chrome(service=service, options=chrome_options)
 
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    except: 
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=chrome_options)
 
     # ESTE es el que realmente usa urllib3
     driver.command_executor._client_config.timeout = REQUEST_TIMEOUT
@@ -125,7 +130,9 @@ def download_from_nextbike(driver, download_dir, url, date_override=None):
 
     if not url.endswith("424"):
         if url.endswith("410"): time.sleep(20)
-        # driver.find_element(By.ID, "parameters[execute_on_lendings_archive]").click()
+        if num_months_back >= 3: 
+            try:    driver.find_element(By.ID, "parameters[execute_on_lendings_archive]").click()
+            except: pass
         driver.find_element(By.ID, "parameters[export_csv]").click()  
         driver.find_element(By.ID, "queries_view_get").click()
 
