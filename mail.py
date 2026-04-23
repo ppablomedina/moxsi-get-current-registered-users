@@ -7,7 +7,7 @@ try:
     INBOX_PASSWORD = creds.split("\n")[1]
 except:
     INBOX_EMAIL    = "pmedina@sagulpa.com"
-    INBOX_PASSWORD = "lpob xgfi zkye srwq"
+    INBOX_PASSWORD = "gayu zzbu ixes tpic"
 
 def get_code():
 
