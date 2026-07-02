@@ -25,7 +25,7 @@ def entry_point(req):
         dic[path_vehiculos_coords]         = download_from_nextbike(driver, download_dir, link_vehiculos_coords)
         dic[path_clientes_registrados]     = download_from_nextbike(driver, download_dir, link_clientes_registrados)
         dic[path_clientes_detalles]        = download_from_nextbike(driver, download_dir, link_clientes_detalles)
-        dic[path_clientes_ultimo_alquiler] = download_from_nextbike(driver, download_dir, link_clientes_ultimo_alquiler)
+        # dic[path_clientes_ultimo_alquiler] = download_from_nextbike(driver, download_dir, link_clientes_ultimo_alquiler) # 01/06/2026 no hay respuesta del servidor
         dic[path_alquileres]               = download_from_nextbike(driver, download_dir, link_alquileres)
 
         # Recaudación: dos descargas quincenales combinadas en un único DataFrame
