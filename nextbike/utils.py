@@ -137,7 +137,7 @@ def download_from_nextbike(driver, download_dir, url, date_override=None):
         driver.find_element(By.ID, "queries_view_get").click()
 
     file_path = None
-    for _ in range(240):
+    for _ in range(320):
         files = glob.glob(os.path.join(download_dir, "*.csv"))
         new_files = [f for f in files if os.path.getmtime(f) > start_cron]
 
