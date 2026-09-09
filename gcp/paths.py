@@ -5,7 +5,7 @@ BUCKET_NAME        = "sagulpa-datalake"
 PATH_DATALAKE_DOCS = "moxsi/documents"
 
 # Fechas base
-now = pd.Timestamp.now()
+now = pd.Timestamp.now() - pd.DateOffset(months=1)
 
 crrnt_full_date = now.strftime("%Y%m%d")          # p.ej. 20251101
 crrnt_year      = now.year
