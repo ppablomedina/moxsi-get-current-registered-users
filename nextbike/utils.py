@@ -67,7 +67,7 @@ def log_in_nextbike(driver, url):
     driver.find_element(By.ID, "login_post").click() 
 
 def get_dates():
-    today = date.today() - pd.DateOffset(months=num_months_back-2)
+    today = date.today() - pd.DateOffset(months=num_months_back-1)
     last_day_prev_month = today.replace(day=1) - timedelta(days=1)
     first_day_prev_month = last_day_prev_month.replace(day=1)
 
@@ -117,6 +117,11 @@ def download_from_nextbike(driver, download_dir, url, date_override=None):
 
     if date_override: start_time, end_time, start_date, end_date = date_override
     else:             start_time, end_time, start_date, end_date = get_dates()
+
+    print(f"start_time: {start_time}")
+    print(f"end_time:   {end_time}")
+    print(f"start_date: {start_date}")
+    print(f"end_date:   {end_date}")    
     
     start_cron = time.time()
     
