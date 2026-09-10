@@ -68,7 +68,7 @@ def log_in_nextbike(driver, url):
 
 def get_dates():
     
-    today = pd.Timestamp(date.today()) - pd.DateOffset(months=2 - 1)
+    today = pd.Timestamp(date.today()) - pd.DateOffset(months= 3 - 1)
     
     last_day_prev_month = today.replace(day=1) - timedelta(days=1)
     first_day_prev_month = last_day_prev_month.replace(day=1)
@@ -82,7 +82,7 @@ def get_dates():
 
 def get_biweekly_dates():
     """Devuelve dos rangos de fechas (primera y segunda quincena) del mes anterior."""
-    today = date.today() - pd.DateOffset(months=2 - 1)
+    today = date.today() - pd.DateOffset(months= 3 - 1)
     last_day = today.replace(day=1) - timedelta(days=1)
     first_day = last_day.replace(day=1)
     mid_last = last_day.replace(day=15)
