@@ -67,7 +67,7 @@ def log_in_nextbike(driver, url):
     driver.find_element(By.ID, "login_post").click() 
 
 def get_dates():
-    today = date.today() - pd.DateOffset(months=num_months_back-1)
+    today = date.today() - pd.DateOffset(months=num_months_back-2)
     last_day_prev_month = today.replace(day=1) - timedelta(days=1)
     first_day_prev_month = last_day_prev_month.replace(day=1)
 
