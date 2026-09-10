@@ -68,7 +68,7 @@ def log_in_nextbike(driver, url):
 
 def get_dates():
     
-    today = pd.Timestamp(date.today()) - pd.DateOffset(months= 3 - 1)
+    today = pd.Timestamp(date.today()) - pd.DateOffset(months= num_months_back - 1)
     
     last_day_prev_month = today.replace(day=1) - timedelta(days=1)
     first_day_prev_month = last_day_prev_month.replace(day=1)
@@ -82,7 +82,7 @@ def get_dates():
 
 def get_biweekly_dates():
     """Devuelve dos rangos de fechas (primera y segunda quincena) del mes anterior."""
-    today = date.today() - pd.DateOffset(months= 3 - 1)
+    today = date.today() - pd.DateOffset(months= num_months_back - 1)
     last_day = today.replace(day=1) - timedelta(days=1)
     first_day = last_day.replace(day=1)
     mid_last = last_day.replace(day=15)
@@ -103,10 +103,6 @@ def get_biweekly_dates():
         ),
     ]
 
-    print("Rangos quincenales:")
-    for i, rango in enumerate(biweekly_dates, start=1):
-        print(f"Quincena {i}: {rango}")
-
     return biweekly_dates
 
 def safe_get(driver, url, timeout=REQUEST_TIMEOUT):
@@ -126,11 +122,6 @@ def download_from_nextbike(driver, download_dir, url, date_override=None):
     if date_override: start_time, end_time, start_date, end_date = date_override
     else:             start_time, end_time, start_date, end_date = get_dates()
 
-    print(f"start_time: {start_time}")
-    print(f"end_time:   {end_time}")
-    print(f"start_date: {start_date}")
-    print(f"end_date:   {end_date}")    
-    
     start_cron = time.time()
     
     if url.endswith(("639", "641", "640")):
