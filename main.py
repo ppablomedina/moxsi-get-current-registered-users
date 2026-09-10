@@ -34,11 +34,11 @@ def entry_point(req):
         df_rec2 = download_from_nextbike(driver, download_dir, link_transactions, date_override=q2)
         dic[path_transactions] = pd.concat([df_rec1, df_rec2], ignore_index=True)
 
-        dic[path_inventario]               = download_from_gs_single_sheet(link_inventario)
-        dic[path_revisiones]               = download_from_gs_excel(link_revisiones)
-        dic[path_repuestos]                = download_from_gs_excel(link_repuestos)
-        dic[path_incidencias]              = download_from_gs_excel(link_incidencias)
-        dic[path_estaciones]               = download_stations_moxsi()
+        # dic[path_inventario]               = download_from_gs_single_sheet(link_inventario)
+        # dic[path_revisiones]               = download_from_gs_excel(link_revisiones)
+        # dic[path_repuestos]                = download_from_gs_excel(link_repuestos)
+        # dic[path_incidencias]              = download_from_gs_excel(link_incidencias)
+        # dic[path_estaciones]               = download_stations_moxsi()
 
         # 3) Subir todo a GCP
         upload_to_gcp(dic)
