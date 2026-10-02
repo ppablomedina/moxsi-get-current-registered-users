@@ -67,11 +67,16 @@ def log_in_nextbike(driver, url):
     driver.find_element(By.ID, "login_post").click() 
 
 def get_dates():
-
-    today = date.today() - pd.DateOffset(months=num_months_back-1)
+    
+    today = pd.Timestamp(date.today()) - pd.DateOffset(months= num_months_back - 1)
+    
     last_day_prev_month = today.replace(day=1) - timedelta(days=1)
     first_day_prev_month = last_day_prev_month.replace(day=1)
-
+    # Impresión de los valores
+    print(f"Start Time: {start_time}")
+    print(f"End Time:   {end_time}")
+    print(f"Start Date: {start_date}")
+    print(f"End Date:   {end_date}")
     return (
         first_day_prev_month.strftime("%Y-%m-%d 00:00"),
         last_day_prev_month.strftime("%Y-%m-%d 23:59"),
@@ -81,8 +86,8 @@ def get_dates():
 
 def get_biweekly_dates():
     """Devuelve dos rangos de fechas (primera y segunda quincena) del mes anterior."""
-    today     = date.today() - pd.DateOffset(months=num_months_back - 1)
-    last_day  = today.replace(day=1) - timedelta(days=1)
+    today = date.today() - pd.DateOffset(months=num_months_back - 1)
+    last_day = today.replace(day=1) - timedelta(days=1)
     first_day = last_day.replace(day=1)
     mid_last  = last_day.replace(day=15)
     mid_first = last_day.replace(day=16)
@@ -119,7 +124,12 @@ def download_from_nextbike(driver, download_dir, url, date_override=None):
     safe_get(driver, url, timeout)
 
     if date_override: start_time, end_time, start_date, end_date = date_override
-    else:             start_time, end_time, start_date, end_date = get_dates()  
+    else:             start_time, end_time, start_date, end_date = get_dates()
+
+    print(f"start_time: {start_time}")
+    print(f"end_time:   {end_time}")
+    print(f"start_date: {start_date}")
+    print(f"end_date:   {end_date}")    
     
     start_cron = time.time()
     
