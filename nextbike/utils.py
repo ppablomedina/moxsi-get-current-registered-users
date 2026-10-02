@@ -72,11 +72,7 @@ def get_dates():
     
     last_day_prev_month = today.replace(day=1) - timedelta(days=1)
     first_day_prev_month = last_day_prev_month.replace(day=1)
-    # Impresión de los valores
-    print(f"Start Time: {start_time}")
-    print(f"End Time:   {end_time}")
-    print(f"Start Date: {start_date}")
-    print(f"End Date:   {end_date}")
+    
     return (
         first_day_prev_month.strftime("%Y-%m-%d 00:00"),
         last_day_prev_month.strftime("%Y-%m-%d 23:59"),
