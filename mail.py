@@ -5,9 +5,10 @@ try:
     creds = os.getenv("GMAIL_CREDS")
     INBOX_EMAIL    = creds.split("\n")[0]
     INBOX_PASSWORD = creds.split("\n")[1]
+
 except:
     INBOX_EMAIL    = "pmedina@sagulpa.com"
-    INBOX_PASSWORD = "gayu zzbu ixes tpic"
+    INBOX_PASSWORD = "pcyg hlpz ruzv ikyn"
 
 def get_code():
 

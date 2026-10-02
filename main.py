@@ -21,12 +21,19 @@ def entry_point(req):
 
         # 2) Descargas que quieras hacer en esta ejecución
         dic[path_abonos]                   = download_from_nextbike(driver, download_dir, link_abonos)
+        print(f"✅ Abonos")
         dic[path_vehiculos_anclados]       = download_from_nextbike(driver, download_dir, link_vehiculos_anclados)
+        print(f"✅ Vehículos anclados")
         dic[path_vehiculos_coords]         = download_from_nextbike(driver, download_dir, link_vehiculos_coords)
+        print(f"✅ Vehículos coords")
         dic[path_clientes_registrados]     = download_from_nextbike(driver, download_dir, link_clientes_registrados)
+        print(f"✅ Clientes registrados")
         dic[path_clientes_detalles]        = download_from_nextbike(driver, download_dir, link_clientes_detalles)
+        print(f"✅ Clientes detalles")
         dic[path_clientes_ultimo_alquiler] = download_from_nextbike(driver, download_dir, link_clientes_ultimo_alquiler)
+        print(f"✅ Clientes último alquiler")
         dic[path_alquileres]               = download_from_nextbike(driver, download_dir, link_alquileres)
+        print(f"✅ Alquileres")
 
         # Recaudación: dos descargas quincenales combinadas en un único DataFrame
         q1, q2 = get_biweekly_dates()
@@ -34,18 +41,19 @@ def entry_point(req):
         df_rec2 = download_from_nextbike(driver, download_dir, link_transactions, date_override=q2)
         dic[path_transactions] = pd.concat([df_rec1, df_rec2], ignore_index=True)
 
-        # dic[path_inventario]               = download_from_gs_single_sheet(link_inventario)
-        # dic[path_revisiones]               = download_from_gs_excel(link_revisiones)
-        # dic[path_repuestos]                = download_from_gs_excel(link_repuestos)
-        # dic[path_incidencias]              = download_from_gs_excel(link_incidencias)
-        # dic[path_estaciones]               = download_stations_moxsi()
+        dic[path_inventario]               = download_from_gs_single_sheet(link_inventario)
+        dic[path_revisiones]               = download_from_gs_excel(link_revisiones)
+        dic[path_repuestos]                = download_from_gs_excel(link_repuestos)
+        dic[path_incidencias]              = download_from_gs_excel(link_incidencias)
+        dic[path_estaciones]               = download_stations_moxsi()
 
         # 3) Subir todo a GCP
         upload_to_gcp(dic)
 
-        return "ETL ejecutado correctamente\n", 200
-
     finally: driver.quit()
+
+    return "ETL ejecutado correctamente\n", 200
+
 
 app = Flask(__name__)
 
