@@ -3,26 +3,21 @@ from selenium.common.exceptions        import TimeoutException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by      import By
-from datetime  import date, timedelta
-from selenium  import webdriver
-from mail      import get_code
-from gcp.paths import num_months_back
+from datetime                          import date, timedelta
+from selenium                          import webdriver
+from mail                              import get_code
+from dates                             import num_months_back
+from gcp.secret_manager                import get_nextbike_creds
 import time, glob, os, pandas as pd
 
 
-try: 
-    creds = os.getenv("NEXTBIKE_CREDS")
-    NEXTBIKE_USER = creds.split("\n")[0]
-    NEXTBIKE_PASS = creds.split("\n")[1]
-except:
-    NEXTBIKE_USER  = "pmedina"
-    NEXTBIKE_PASS  = "nPmse.52725"
+NEXTBIKE_USER, NEXTBIKE_PASS = get_nextbike_creds()
 
 REQUEST_TIMEOUT = 400 
 
 def set_driver():    
     chrome_options = Options()
-    chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument("--headless=new") # Comentar para pruebas en local
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
@@ -117,15 +112,10 @@ def download_from_nextbike(driver, download_dir, url, date_override=None):
     if url.endswith("410"): timeout = 5
     else:                   timeout = REQUEST_TIMEOUT
         
-    safe_get(driver, url, timeout)
+    safe_get(driver, url, timeout)     
 
     if date_override: start_time, end_time, start_date, end_date = date_override
     else:             start_time, end_time, start_date, end_date = get_dates()
-
-    print(f"start_time: {start_time}")
-    print(f"end_time:   {end_time}")
-    print(f"start_date: {start_date}")
-    print(f"end_date:   {end_date}")    
     
     start_cron = time.time()
     
@@ -141,12 +131,17 @@ def download_from_nextbike(driver, download_dir, url, date_override=None):
         driver.find_element(By.ID, "parameters[start_date]").send_keys("2018-03-06")
         driver.find_element(By.ID, "parameters[end_date]").send_keys(end_date)  
 
-    if not url.endswith("424"):
+    elif url.endswith("/places/"): driver.get("https://my.nextbike.net/office/places.csv?parameters%5Blimit%5D=50")
+
+    elif not url.endswith("424"):
+        
         if url.endswith("410"): time.sleep(20)
-        if num_months_back >= 3: 
+
+        if num_months_back >= 3:
             try:    driver.find_element(By.ID, "parameters[execute_on_lendings_archive]").click()
             except: pass
-        driver.find_element(By.ID, "parameters[export_csv]").click()  
+
+        driver.find_element(By.ID, "parameters[export_csv]").click()
         driver.find_element(By.ID, "queries_view_get").click()
 
     file_path = None
@@ -161,6 +156,7 @@ def download_from_nextbike(driver, download_dir, url, date_override=None):
         time.sleep(1)
 
     if not file_path: raise RuntimeError("No se encontró ningún CSV generado por Nextbike")
+    
     try:               return pd.read_csv(file_path, sep='\t', dtype={'mobile': str})
     except ValueError: return pd.read_csv(file_path, sep='\t')
 

@@ -1,14 +1,8 @@
-import imaplib, email, re, os
+import imaplib, email, re
+from   gcp.secret_manager import get_gmail_creds
 
 
-try:
-    creds = os.getenv("GMAIL_CREDS")
-    INBOX_EMAIL    = creds.split("\n")[0]
-    INBOX_PASSWORD = creds.split("\n")[1]
-
-except:
-    INBOX_EMAIL    = "pmedina@sagulpa.com"
-    INBOX_PASSWORD = "pcyg hlpz ruzv ikyn"
+INBOX_EMAIL, INBOX_PASSWORD = get_gmail_creds()
 
 def get_code():
 
