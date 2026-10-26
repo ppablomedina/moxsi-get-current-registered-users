@@ -133,9 +133,13 @@ def download_from_nextbike(driver, download_dir, url, date_override=None):
         driver.find_element(By.ID, "parameters[start_time]").send_keys(start_time)
         driver.find_element(By.ID, "parameters[end_time]").send_keys(end_time)
 
-    elif url.endswith(("730", "129", "525")):
+    elif url.endswith(("129", "525")):
         driver.find_element(By.ID, "parameters[start_date]").send_keys(start_date)
         driver.find_element(By.ID, "parameters[end_date]").send_keys(end_date)
+
+    elif url.endswith(("730")):
+        driver.find_element(By.ID, "parameters[start_date]").send_keys("2018-03-06")
+        driver.find_element(By.ID, "parameters[end_date]").send_keys(end_date)  
 
     if not url.endswith("424"):
         if url.endswith("410"): time.sleep(20)
