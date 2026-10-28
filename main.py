@@ -20,8 +20,8 @@ def entry_point(req):
 
     send_email(
         to="pmedina",
-        subject=f"ℹ️ Usuarios activos Moxsi ({today_date})",
-        body=f"Número de usuarios activos en Moxsi a día {today_date}: {n_active_users} usuarios"
+        subject=f"ℹ️ Usuarios registrados Moxsi ({today_date})",
+        body=f"Número de usuarios registrados en Moxsi a día {today_date}: {n_active_users} usuarios"
     )
 
     return "ETL ejecutado correctamente\n", 200
