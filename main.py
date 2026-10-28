@@ -1,57 +1,28 @@
-from flask          import Flask, request
-from nextbike.utils import set_driver, download_from_nextbike, log_in_nextbike, get_biweekly_dates
-from nextbike.paths import *
-from gcp.utils      import upload_to_gcp
-from gcp.paths      import *
-from gs.utils       import download_from_gs_excel, download_from_gs_single_sheet
-from gs.paths       import *
+from flask    import Flask, request
+from nextbike import set_driver, log_in_nextbike, download_customers_details
+from datetime import date
+from mail     import send_email
 
 
 def entry_point(req):
 
-    dic = {}
+    today_date = date.today().strftime("%Y-%m-%d")
 
-    # Crear driver y carpeta de descargas SOLO para esta ejecución
     driver, download_dir = set_driver()
+    
+    log_in_nextbike(driver)
 
-    try:
-        # 1) Login en Nextbike
-        log_in_nextbike(driver, link_queries)
+    df = download_customers_details(driver, download_dir, today_date)
 
-        # 2) Descargas que quieras hacer en esta ejecución
-        dic[path_abonos]                   = download_from_nextbike(driver, download_dir, link_abonos)
-        print(f"✅ Abonos")
-        dic[path_vehiculos_anclados]       = download_from_nextbike(driver, download_dir, link_vehiculos_anclados)
-        print(f"✅ Vehículos anclados")
-        dic[path_vehiculos_coords]         = download_from_nextbike(driver, download_dir, link_vehiculos_coords)
-        print(f"✅ Vehículos coords")
-        dic[path_clientes_registrados]     = download_from_nextbike(driver, download_dir, link_clientes_registrados)
-        print(f"✅ Clientes registrados")
-        dic[path_clientes_detalles]        = download_from_nextbike(driver, download_dir, link_clientes_detalles)
-        print(f"✅ Clientes detalles")
-        dic[path_clientes_ultimo_alquiler] = download_from_nextbike(driver, download_dir, link_clientes_ultimo_alquiler)
-        print(f"✅ Clientes último alquiler")
-        dic[path_alquileres]               = download_from_nextbike(driver, download_dir, link_alquileres)
-        print(f"✅ Alquileres")
-        dic[path_estaciones]               = download_from_nextbike(driver, download_dir, link_estaciones)
-        print(f"✅ Estaciones")
+    driver.quit()
 
-        # Recaudación: dos descargas quincenales combinadas en un único DataFrame
-        q1, q2 = get_biweekly_dates()
-        df_rec1 = download_from_nextbike(driver, download_dir, link_transactions, date_override=q1)
-        df_rec2 = download_from_nextbike(driver, download_dir, link_transactions, date_override=q2)
-        dic[path_transactions] = pd.concat([df_rec1, df_rec2], ignore_index=True)
+    n_active_users = df[df['active'] == 1].shape[0]
 
-        dic[path_inventario]               = download_from_gs_single_sheet(link_inventario)
-        dic[path_revisiones]               = download_from_gs_excel(link_revisiones)
-        dic[path_repuestos]                = download_from_gs_excel(link_repuestos)
-        dic[path_incidencias]              = download_from_gs_excel(link_incidencias_2026)
-        dic[path_almacen]                  = download_from_gs_excel(link_almacen)
-
-        # 3) Subir todo a GCP
-        upload_to_gcp(dic)
-
-    finally: driver.quit()
+    send_email(
+        to="pmedina",
+        subject=f"ℹ️ Usuarios activos Moxsi ({today_date})",
+        body=f"Número de usuarios activos en Moxsi a día {today_date}: {n_active_users} usuarios"
+    )
 
     return "ETL ejecutado correctamente\n", 200
 

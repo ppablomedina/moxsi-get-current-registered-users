@@ -1,5 +1,6 @@
-import imaplib, email, re
-from   gcp.secret_manager import get_gmail_creds
+import imaplib, smtplib, email, re
+from email.message import EmailMessage
+from secret_manager import get_gmail_creds
 
 
 INBOX_EMAIL, INBOX_PASSWORD = get_gmail_creds()
@@ -44,3 +45,15 @@ def get_code():
     mail.logout()
 
     return codigo
+
+def send_email(to, subject, body):
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = INBOX_EMAIL
+    msg["To"] = f"{to}@sagulpa.com"
+    msg.set_content(body)
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.starttls()
+        server.login(INBOX_EMAIL, INBOX_PASSWORD)
+        server.send_message(msg)
