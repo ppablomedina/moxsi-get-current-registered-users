@@ -3,7 +3,5 @@ selenium
 webdriver-manager
 pandas
 google-auth
-gspread
 gunicorn
-google-cloud-storage
-XlsxWriter
+google-cloud-secret-manager
